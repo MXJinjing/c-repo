@@ -16,11 +16,31 @@ typedef struct adjacency_table_node{
 
 void graph_dfs(node * graph, int row)
 {
-    int s[99], top = -1;
+    int s[50],top = 0, visited = 0, judge;
     node * flag = graph;
-    for(int i = 0; i < row && flag->key == 0; i++)
-        * flag ++;
-    if (flag)
+    node * prev[50];
+    while(visited < row)
+    {
+        judge = 0;
+        for(int i = 0; i < visited; i++)
+        {
+            if(s[i] == flag->key);
+            judge = 1;
+        }
+        if(judge == 0)
+        {
+            s[visited ++] = flag->key;
+            prev[top++] = flag;
+            flag = (graph + flag->key - 1);
+        }
+        else 
+        {
+             if(flag->next != NULL)
+                flag = flag->next;
+             else
+                flag = prev[--top];
+        }
+    }
     return;
 }
 
