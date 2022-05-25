@@ -16,11 +16,46 @@ typedef struct adjacency_table_node{
 
 void graph_dfs(node * graph, int row)
 {
-    int s[99], top = -1;
-    node * flag = graph;
-    for(int i = 0; i < row && flag->key == 0; i++)
-        * flag ++;
-    if (flag)
+    if(graph == NULL)return;
+    int s[50],top = 0, visited = 1, judge;
+    node * flag = graph->next;
+    node * prev[50];
+
+    //first node of graph
+    s[top ++]  = graph->key;
+    printf("%d Now Visited\n",graph->key);
+
+    //the other nodes of graph
+    while(visited < row)
+    {
+        judge = 0;
+        for(int i = 0; i < visited; i++)
+        {
+            if(s[i] == flag->key)
+            {
+                printf("s[%d] = %d & flag->key = %d\n", i, s[i],flag->key);
+                judge = 1;
+            }
+        }
+        if(judge == 0)
+        {
+            printf("%d Now Visited\n",flag->key);
+            s[visited ++] = flag->key;
+            prev[top++] = flag;
+            flag = (graph + flag->key - 1)->next;
+        }
+        else 
+        {
+            printf("%d Visited and skip\n",flag->key);
+             if(flag->next != NULL)
+                flag = flag->next;
+             else
+                flag = prev[--top];
+        }
+    }
+    for(int i = 0; i < row; i++)
+        printf("%d ", s[i]);
+    printf("\n");
     return;
 }
 
@@ -75,6 +110,7 @@ int main()
         {0,1,0,1,0},
     };
 
-    create_graph(graph,(int *)_graph,5);
+    create_graph(graph,(int *)_graph,row);
+    graph_dfs(graph,row);
     return 0;
 }
