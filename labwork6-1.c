@@ -14,49 +14,34 @@ typedef struct adjacency_table_node{
     struct adjacency_table_node * next;
 }node;
 
-void graph_dfs(node * graph, int row)
+void * graph_dfs(node * graph, int row, FILE * file)
 {
-    if(graph == NULL)return;
-    int s[50],top = 0, visited = 1, judge;
-    node * flag = graph->next;
-    node * prev[50];
-
-    //first node of graph
-    s[top ++]  = graph->key;
-    printf("%d Now Visited\n",graph->key);
-
-    //the other nodes of graph
-    while(visited < row)
+    if(graph == NULL)return;//return if graph is empty
+    int judge[50] = {0}, top = -1, visited = 0;
+    node * flag = graph;//a flag for wondering the graph
+    node * prev[50];//a stack to save prev nodes
+    
+    while(visited < row)//repeat until all nodes are visited
     {
-        judge = 0;
-        for(int i = 0; i < visited; i++)
+        if(judge[flag->key - 1] == 0)//if node not visited
         {
-            if(s[i] == flag->key)
-            {
-                printf("s[%d] = %d & flag->key = %d\n", i, s[i],flag->key);
-                judge = 1;
-            }
+            //printf("%d Now Visited\n",flag->key);
+            judge[flag->key - 1] = 1;//set node to visited
+            prev[++ top] = flag;
+            fprintf(file,"%d",flag->key);
+            visited ++;
+            flag = (graph + flag->key - 1);//travel to another head
         }
-        if(judge == 0)
+        else //if node has been visited
         {
-            printf("%d Now Visited\n",flag->key);
-            s[visited ++] = flag->key;
-            prev[top++] = flag;
-            flag = (graph + flag->key - 1)->next;
-        }
-        else 
-        {
-            printf("%d Visited and skip\n",flag->key);
-             if(flag->next != NULL)
+            //printf("%d Visited and skip\n",flag->key);
+            if(flag->next != NULL)
                 flag = flag->next;
-             else
-                flag = prev[--top];
+            else
+                flag = prev[top --];//return back to previous node
         }
     }
-    //print keys
-    for(int i = 0; i < row; i++)
-        printf("%d ", s[i]);
-    printf("\n");
+    fprintf(file, "\n");
     return;
 }
 
@@ -79,9 +64,7 @@ void create_graph(node * graph_out, int * graph_in, int row)
                     temp->key = j + 1;
                     temp->next = NULL;
                     while( head->next != NULL)
-                    {
                         head = head->next;
-                    }
                     head->next =temp;
             }
         }
@@ -99,6 +82,7 @@ void create_graph(node * graph_out, int * graph_in, int row)
 }
 int main()
 {
+    FILE * out = fopen("labwork6-1-out.txt","w");//open output file
     int row = 5;
     node graph[5];
 
@@ -109,9 +93,9 @@ int main()
         {1,1,0,1,0},
         {0,0,1,0,1},
         {0,1,0,1,0},
-    };
+    };//new table of the graph
 
     create_graph(graph,(int *)_graph,row);
-    graph_dfs(graph,row);
+    graph_dfs(graph,row,out);
     return 0;
 }
