@@ -53,6 +53,7 @@ void graph_dfs(node * graph, int row)
                 flag = prev[--top];
         }
     }
+    //print keys
     for(int i = 0; i < row; i++)
         printf("%d ", s[i]);
     printf("\n");
