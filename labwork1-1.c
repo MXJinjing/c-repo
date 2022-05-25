@@ -15,7 +15,7 @@ int main()
     int m,n;
     printf("向量求法\n请输入m,n:\n");
     scanf("%d%d",&m,&n);
-    int monkey[999];
+    int monkey[99];
     int i, m_, count, q;
 
     for(i = 0; i < m ; i ++)
