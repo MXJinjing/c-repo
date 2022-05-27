@@ -116,6 +116,7 @@ void create_graph(node * graph_out, int * graph_in, int row)
         printf("^\n");
     }
 }
+
 int main()
 {
     FILE * out = fopen("labwork6-1-out.txt","w");//open output file
