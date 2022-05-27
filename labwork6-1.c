@@ -25,7 +25,6 @@ void graph_dfs(node * graph, int row, FILE * file)
     {
         if(judge[flag->key] == 0)//if node not visited
         {
-            //printf("%d Now Visited\n",flag->key);
             judge[flag->key] = 1;//set node to visited
             prev[++ top] = flag;
             fprintf(file,"%d",flag->key);
@@ -34,7 +33,6 @@ void graph_dfs(node * graph, int row, FILE * file)
         }
         else //if node has been visited
         {
-            //printf("%d Visited and skip\n",flag->key);
             if(flag->next != NULL)
                 flag = flag->next;
             else
@@ -48,14 +46,15 @@ void graph_dfs(node * graph, int row, FILE * file)
 void graph_bfs (node * graph, int row, FILE * file)
 {
     if(graph == NULL)return;
-    int judge[50] = {0}, head = 0, tail = 0;
-    int queue[50];
+    int judge[50] = {0}, head = 0, tail = 0, queue[50];
     node * flag;
+    //visit first node
     queue[0] = graph->key;
     judge[queue[0]] = 1;
-    while(head <= tail)
+    //visit the other nodes
+    while(head <= tail)//repeat until all nodes are visited
     {
-        //printf("head = %d, tail = %d, headkey = %d\n", head, tail, queue[head]);
+        //find the exact match node according to the keyword
         for(int i = 0; i < row; i ++)
             if((graph + i)->key == queue[head])
             {
@@ -66,12 +65,11 @@ void graph_bfs (node * graph, int row, FILE * file)
         flag = flag->next;
         while(flag != NULL)
         {
-            //printf("flag->key = %d\n",flag->key);
+            //if not visited, put into the queue
             if(judge[flag->key] == 0)
             {
                 queue[++tail] = flag->key;
-                //printf("\t flag not visited, settail = %d , queuetail = %d\n",tail,flag->key);
-                judge[flag->key] = 1;
+                judge[flag->key] = 1;//set to visited
             }
             flag = flag->next;
         }
