@@ -14,7 +14,7 @@ typedef struct adjacency_table_node{
     struct adjacency_table_node * next;
 }node;
 
-void * graph_dfs(node * graph, int row, FILE * file)
+void graph_dfs(node * graph, int row, FILE * file)
 {
     if(graph == NULL)return;//return if graph is empty
     int judge[50] = {0}, top = -1, visited = 0;
@@ -23,14 +23,14 @@ void * graph_dfs(node * graph, int row, FILE * file)
     
     while(visited < row)//repeat until all nodes are visited
     {
-        if(judge[flag->key - 1] == 0)//if node not visited
+        if(judge[flag->key] == 0)//if node not visited
         {
             //printf("%d Now Visited\n",flag->key);
-            judge[flag->key - 1] = 1;//set node to visited
+            judge[flag->key] = 1;//set node to visited
             prev[++ top] = flag;
             fprintf(file,"%d",flag->key);
             visited ++;
-            flag = (graph + flag->key - 1);//travel to another head
+            flag = (graph + flag->key);//travel to another head
         }
         else //if node has been visited
         {
@@ -45,14 +45,51 @@ void * graph_dfs(node * graph, int row, FILE * file)
     return;
 }
 
+void graph_bfs (node * graph, int row, FILE * file)
+{
+    if(graph == NULL)return;
+    int judge[50] = {0}, head = 0, tail = 0;
+    int queue[50];
+    node * flag;
+    queue[0] = graph->key;
+    judge[queue[0]] = 1;
+    while(head <= tail)
+    {
+        //printf("head = %d, tail = %d, headkey = %d\n", head, tail, queue[head]);
+        for(int i = 0; i < row; i ++)
+            if((graph + i)->key == queue[head])
+            {
+                flag = graph + i;
+                break;
+            }
+        fprintf(file,"%d",flag->key);
+        flag = flag->next;
+        while(flag != NULL)
+        {
+            //printf("flag->key = %d\n",flag->key);
+            if(judge[flag->key] == 0)
+            {
+                queue[++tail] = flag->key;
+                //printf("\t flag not visited, settail = %d , queuetail = %d\n",tail,flag->key);
+                judge[flag->key] = 1;
+            }
+            flag = flag->next;
+        }
+        head ++;
+    }
+    fprintf(file,"\n");
+    return;
+}
+
 void create_graph(node * graph_out, int * graph_in, int row)
 {
     //init graph_out
-    for(int i = 0; i < row; i++)
+    for(int i = 0; i < row; i ++)
     {
         graph_out[i].key = i+1;
         graph_out[i].next = NULL;
     }
+    //link all the nodes
     for(int i = 0; i < row; i ++)
     {
         for(int j = 0; j < row; j++)
@@ -69,6 +106,7 @@ void create_graph(node * graph_out, int * graph_in, int row)
             }
         }
     }
+    //print the new graph
     for(int i = 0; i < row; i++)
     {
         node * head = &graph_out[i];
@@ -97,5 +135,6 @@ int main()
 
     create_graph(graph,(int *)_graph,row);
     graph_dfs(graph,row,out);
+    graph_bfs(graph,row,out);
     return 0;
 }
