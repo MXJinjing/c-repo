@@ -9,130 +9,151 @@
 #include <string.h>
 #include <stdlib.h>
 
-typedef struct adjacency_table_node{
-    int key;
-    struct adjacency_table_node * next;
-}node;
-
-void graph_dfs(node * graph, int row, FILE * file)
+typedef struct adjacency_table_node
 {
-    if(graph == NULL)return;//return if graph is empty
-    int judge[50] = {0}, top = -1, visited = 0;
-    node * flag = graph;//a flag for wondering the graph
-    node * prev[50];//a stack to save prev nodes
-    
-    while(visited < row)//repeat until all nodes are visited
+    int key;
+    struct adjacency_table_node *next;
+} node;
+
+void graph_dfs(node *graph, int row, FILE *file)
+{
+    if (graph == NULL)
+        return; // return if graph is empty
+    int judge[50] = {0}, top = -1, visited = 0, prev_judge = 0;
+    node *flag = graph; // a flag for wondering the graph
+    node *prev[500];    // a stack to save prev nodes
+
+    while (visited < row) // repeat until all nodes are visited
     {
-        if(judge[flag->key] == 0)//if node not visited
+        if (prev_judge == 0) // if the node is not in the prev stack
         {
-            judge[flag->key] = 1;//set node to visited
-            prev[++ top] = flag;
-            fprintf(file,"%d",flag->key);
-            visited ++;
-            flag = (graph + flag->key);//travel to another head
+            fprintf(file, "%d", flag->key);
+            visited++;
+            judge[flag->key] = 1; // set node to visited
+            prev[++top] = flag;   // recode previous node
         }
-        else //if node has been visited
+        else
+            prev_judge = 0;
+
+        flag = flag->next; // go to next node
+        while (flag != NULL)
         {
-            if(flag->next != NULL)
-                flag = flag->next;
-            else
-                flag = prev[top --];//return back to previous node
+            // find unvisited node
+            if (judge[flag->key] == 0)
+            {
+                flag = &graph[flag->key - 1];
+                break;
+            }
+            flag = flag->next;
+        }
+        if (top >= 1 && flag == NULL) // if all nodes visited
+        {
+            prev_judge = 1;
+            flag = prev[top -= 1]; // return back to previous node
         }
     }
     fprintf(file, "\n");
     return;
 }
 
-void graph_bfs (node * graph, int row, FILE * file)
+void graph_bfs(node *graph, int row, FILE *file)
 {
-    if(graph == NULL)return;
+    if (graph == NULL)
+        return;
     int judge[50] = {0}, head = 0, tail = 0, queue[50];
-    node * flag;
-    //visit first node
+    node *flag;
+    // visit first node
     queue[0] = graph->key;
     judge[queue[0]] = 1;
-    //visit the other nodes
-    while(head <= tail)//repeat until all nodes are visited
+    // visit the other nodes
+    while (head <= tail) // repeat until all nodes are visited
     {
-        //find the exact match node according to the keyword
-        for(int i = 0; i < row; i ++)
-            if((graph + i)->key == queue[head])
+        // find the exact match node according to the keyword
+        for (int i = 0; i < row; i++)
+            if ((graph + i)->key == queue[head])
             {
                 flag = graph + i;
                 break;
             }
-        fprintf(file,"%d",flag->key);
+        fprintf(file, "%d", flag->key);
         flag = flag->next;
-        while(flag != NULL)
+        while (flag != NULL)
         {
-            //if not visited, put into the queue
-            if(judge[flag->key] == 0)
+            // if not visited, put into the queue
+            if (judge[flag->key] == 0)
             {
                 queue[++tail] = flag->key;
-                judge[flag->key] = 1;//set to visited
+                judge[flag->key] = 1; // set to visited
             }
             flag = flag->next;
         }
-        head ++;
+        head++;
     }
-    fprintf(file,"\n");
+    fprintf(file, "\n");
     return;
 }
 
-void create_graph(node * graph_out, int * graph_in, int row)
+void create_graph(node *graph_out, int *graph_in, int row, FILE *file)
 {
-    //init graph_out
-    for(int i = 0; i < row; i ++)
+    // init graph_out
+    for (int i = 0; i < row; i++)
     {
-        graph_out[i].key = i+1;
+        graph_out[i].key = i + 1;
         graph_out[i].next = NULL;
     }
-    //link all the nodes
-    for(int i = 0; i < row; i ++)
+    // link all the nodes
+    for (int i = 0; i < row; i++)
     {
-        for(int j = 0; j < row; j++)
+        for (int j = 0; j < row; j++)
         {
-            if(* (graph_in + i*row + j) != 0)
+            if (*(graph_in + i * row + j) != 0)
             {
-                    node * head, * temp = (node *)malloc(sizeof(node));
-                    head = &graph_out[i];
-                    temp->key = j + 1;
-                    temp->next = NULL;
-                    while( head->next != NULL)
-                        head = head->next;
-                    head->next =temp;
+                node *head, *temp = (node *)malloc(sizeof(node));
+                head = &graph_out[i];
+                temp->key = j + 1;
+                temp->next = NULL;
+                while (head->next != NULL)
+                    head = head->next;
+                head->next = temp;
             }
         }
     }
-    //print the new graph
-    for(int i = 0; i < row; i++)
+    // print the new graph
+    for (int i = 0; i < row; i++)
     {
-        node * head = &graph_out[i];
-        while(head != NULL)
+        node *head = &graph_out[i];
+        while (head != NULL)
         {
-            printf("%d->",head->key);
+            fprintf(file, "%d->", head->key);
             head = head->next;
         }
-        printf("^\n");
+        fprintf(file, "^\n");
     }
 }
 int main()
 {
-    FILE * out = fopen("labwork6-1-out.txt","w");//open output file
-    int row = 5;
-    node graph[5];
+    FILE *gf = fopen("labwork6-1-graph.txt", "w");
+    FILE *out = fopen("labwork6-1-out.txt", "w"); // open output file
+    int row = 8;
+    node graph[8];
 
-    int _graph[5][5] =
-    {
-        {0,1,1,0,0},
-        {1,0,1,0,1},
-        {1,1,0,1,0},
-        {0,0,1,0,1},
-        {0,1,0,1,0},
-    };//new table of the graph
+    int _graph[8][8] =
+        {
+            {0, 1, 1, 0, 0, 0, 0, 0},
+            {1, 0, 0, 1, 1, 0, 0, 0},
+            {1, 0, 0, 0, 0, 1, 1, 0},
+            {0, 1, 0, 0, 0, 0, 0, 1},
+            {0, 1, 0, 0, 0, 0, 0, 1},
+            {0, 0, 1, 0, 0, 0, 0, 1},
+            {0, 0, 1, 0, 0, 0, 0, 1},
+            {0, 0, 0, 1, 1, 1, 1, 0}}; // new table of the graph
 
-    create_graph(graph,(int *)_graph,row);
-    graph_dfs(graph,row,out);
-    graph_bfs(graph,row,out);
+    create_graph(graph, (int *)_graph, row, gf);
+    fprintf(out, "DFS\t");
+    graph_dfs(graph, row, out);
+    fprintf(out, "BFS\t");
+    graph_bfs(graph, row, out);
+    fclose(gf);
+    fclose(out);
     return 0;
 }

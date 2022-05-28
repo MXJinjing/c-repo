@@ -9,9 +9,7 @@
         ""
       ],
       "stopAtEntry": false,
-      "cwd": "/home/ecs-user/git/c-repo",
       "environment": [],
-      "program": "/home/ecs-user/git/c-repo/build/Debug/outDebug",
       "internalConsoleOptions": "openOnSessionStart",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
