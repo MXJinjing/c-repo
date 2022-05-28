@@ -20,8 +20,8 @@ void graph_dfs(node *graph, int row, FILE *file)
     if (graph == NULL)
         return; // return if graph is empty
     int judge[50] = {0}, top = -1, visited = 0, prev_judge = 0;
-    node *flag = graph; // a flag for wondering the graph
-    node *prev[500];    // a stack to save prev nodes
+    node *flag = graph; 
+    node *prev[500];    
 
     while (visited < row) // repeat until all nodes are visited
     {
