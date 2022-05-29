@@ -9,18 +9,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct node{
+typedef struct node {
     int ID;
     struct node *Next;
-}mk;
+} mk;
 
 int main()
 {
     mk *head, *q, *p, *r;
-    int m,n;
+    int m, n;
     printf("链表求法\n请输入m,n:\n");
-    scanf("%d %d",&m,&n);
-    if(m<1 || n<1)
+    scanf("%d %d", &m, &n);
+    if (m < 1 || n < 1)
     {
         printf("数据错误");
         return 0;
@@ -33,10 +33,10 @@ int main()
 
     //创建剩余节点
     p = head;
-    for(int i = 0; i < m-1; i++)
+    for (int i = 0; i < m - 1; i++)
     {
         q = malloc(sizeof(mk));
-        q->ID = i+2;
+        q->ID = i + 2;
         q->Next = NULL;
         p->Next = q;
         p = q;
@@ -48,22 +48,23 @@ int main()
 
     r = q = head;
     p = q->Next;
-    while(1)
+    while (1)
     {
         //移动指针
-        for(int i=0; i<n-1; i++)
+        for (int i = 0; i < n - 1; i++)
         {
             r = q;
             q = p;
             p = p->Next;
         }
-        if(q ->Next == q)break;
-        printf("第%d只猴子离开了\n",q->ID);
+        if (q->Next == q)
+            break;
+        printf("第%d只猴子离开了\n", q->ID);
         //删除节点
-        r->Next= p;
+        r->Next = p;
         q = r = p;
         p = p->Next;
     }
-    printf("第%d只猴子为王\n",q->ID);
+    printf("第%d只猴子为王\n", q->ID);
     return 0;
 }

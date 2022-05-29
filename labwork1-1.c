@@ -12,43 +12,44 @@
 int main()
 {
     printf("title\n");
-    int m,n;
+    int m, n;
     printf("向量求法\n请输入m,n:\n");
-    scanf("%d%d",&m,&n);
+    scanf("%d%d", &m, &n);
     int monkey[99];
     int i, m_, count, q;
 
-    for(i = 0; i < m ; i ++)
-        monkey[i] = 0;  //规定所有猴子都在
+    for (i = 0; i < m; i++)
+        monkey[i] = 0; //规定所有猴子都在
 
-    m_ = 0; count = 0, q = 0;
-    while(m_ != m-1)    //限制次数
+    m_ = 0;
+    count = 0, q = 0;
+    while (m_ != m - 1) //限制次数
     {
-        if(count == n-1)    //计数完成
+        if (count == n - 1) //计数完成
         {
-            while(monkey[q] != 0)   //猴子刚好不在则往后一个
+            while (monkey[q] != 0) //猴子刚好不在则往后一个
             {
-                q ++;
-                if(q == m)
+                q++;
+                if (q == m)
                     q = 0;
             }
-            printf("第%d只猴子离开了\n",q+1);
+            printf("第%d只猴子离开了\n", q + 1);
             monkey[q] = 1;
-            m_ ++;
-            count = 0;  //重置计数
+            m_++;
+            count = 0; //重置计数
         }
         else //计数未完成
         {
-            if(monkey[q] == 0)
-                count ++;   //如果猴子未离开则计数
+            if (monkey[q] == 0)
+                count++; //如果猴子未离开则计数
         }
-        q ++;
-        if(q == m)
+        q++;
+        if (q == m)
             q = 0;
     }
 
-    for(i = 0; i < m ; i ++)    //寻找猴王
-        if(monkey[i] == 0)
-            printf("第%d只猴子为王\n",i+1);
+    for (i = 0; i < m; i++) //寻找猴王
+        if (monkey[i] == 0)
+            printf("第%d只猴子为王\n", i + 1);
     return 0;
 }

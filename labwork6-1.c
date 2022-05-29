@@ -6,11 +6,10 @@
 */
 
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
-typedef struct adjacency_table_node
-{
+typedef struct adjacency_table_node {
     int key;
     struct adjacency_table_node *next;
 } node;
@@ -20,8 +19,8 @@ void graph_dfs(node *graph, int row, FILE *file)
     if (graph == NULL)
         return; // return if graph is empty
     int judge[50] = {0}, top = -1, visited = 0, prev_judge = 0;
-    node *flag = graph; 
-    node *prev[500];    
+    node *flag = graph;
+    node *prev[500];
 
     while (visited < row) // repeat until all nodes are visited
     {
