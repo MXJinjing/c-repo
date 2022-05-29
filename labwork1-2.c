@@ -60,7 +60,7 @@ int main()
         if(q ->Next == q)break;
         printf("第%d只猴子离开了\n",q->ID);
         //删除节点
-        r->Next = p;
+        r->Next= p;
         q = r = p;
         p = p->Next;
     }
