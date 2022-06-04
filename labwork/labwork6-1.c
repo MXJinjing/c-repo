@@ -22,7 +22,7 @@ void graph_dfs(node *graph, int row, FILE *file)
     node *flag = graph;
     node *prev[500];
 
-    while (visited < row) // repeat until all nodes are visited
+    while (visited < row) // repeat until all npytodes are visited
     {
         if (prev_judge == 0) // if the node is not in the prev stack
         {
