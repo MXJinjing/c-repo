@@ -1,9 +1,0 @@
-先序（递归)	abdefgchikj
-先序（非递归)	abdefgchikj
-中序（递归)	bfegdahikcj
-中序（非递归)	bfegdahikcj
-后序（递归)	fgedbkihjca
-后序（非递归)	fgedbkihjca
-分层	abcdhjeifg
-
-树高：5
