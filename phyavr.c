@@ -18,7 +18,7 @@ int main()
                       + pow((a5-average),2))/(n * (n-1)));
     ub = deltai/sqrt(3.0);
     ux = sqrt(ua * ua + ub * ub);
-    printf("ua = %e, ub = %e, ux = %e\n", ua, ua, ux);
+    printf("ua = %e, ub = %e, ux = %e\n", ua, ub, ux);
     fprintf(p,"%e\t%e\t%e\t%e\t%e\n",
             average,ux,deltai,ua,ub);
     fclose(p);
