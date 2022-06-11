@@ -9,7 +9,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct adjacency_table_node {
+typedef struct adjacency_table_node
+{
     int key;
     struct adjacency_table_node *next;
 } node;
@@ -40,7 +41,14 @@ void graph_dfs(node *graph, int row, FILE *file)
             // find unvisited node
             if (judge[flag->key] == 0)
             {
-                flag = &graph[flag->key - 1];
+                for (int i = 0; i < row; i++)
+                {
+                    if ((graph + i)->key == flag->key)
+                    {
+                        flag = graph + i;
+                        break;
+                    }
+                }
                 break;
             }
             flag = flag->next;
