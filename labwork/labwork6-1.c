@@ -9,7 +9,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct adjacency_table_node {
+typedef struct adjacency_table_node
+{
     int key;
     struct adjacency_table_node *next;
 } node;
@@ -18,37 +19,67 @@ void graph_dfs(node *graph, int row, FILE *file)
 {
     if (graph == NULL)
         return; // return if graph is empty
-    int judge[50] = {0}, top = -1, visited = 0, prev_judge = 0;
-    node *flag = graph;
-    node *prev[500];
 
-    while (visited < row) // repeat until all npytodes are visited
+    int judge[50] = {0}, top, visited = 0, prev_judge, sub_done;
+    node *flag, *prev[500];
+
+    while (visited < row) // until all nodes visited
     {
-        if (prev_judge == 0) // if the node is not in the prev stack
+        sub_done = 0, top = -1, prev_judge = 0;
+        for (int i = 0; i < row; i++)
         {
-            fprintf(file, "%d", flag->key);
-            visited++;
-            judge[flag->key] = 1; // set node to visited
-            prev[++top] = flag;   // recode previous node
-        }
-        else
-            prev_judge = 0;
-
-        flag = flag->next; // go to next node
-        while (flag != NULL)
-        {
-            // find unvisited node
-            if (judge[flag->key] == 0)
+            if (judge[(graph + i)->key] == 0)
             {
-                flag = &graph[flag->key - 1];
+                flag = graph + i;
+                printf("**subgraph top flag->key = %d\n", flag->key);
                 break;
             }
-            flag = flag->next;
         }
-        if (top >= 1 && flag == NULL) // if all nodes visited
+        while (sub_done == 0) // repeat until one subgraph is visited
         {
-            prev_judge = 1;
-            flag = prev[top -= 1]; // return back to previous node
+            if (prev_judge == 0) // if the node is not visited before
+            {
+                printf("*now flag->key = %d\n", flag->key);
+                fprintf(file, "%d", flag->key);
+                visited++;
+                judge[flag->key] = 1; // set node to visited
+                prev[++top] = flag;   // recode previous node
+                printf("prev[%d] = %d\n", top, prev[top]->key);
+            }
+            else
+                prev_judge = 0;
+
+            flag = flag->next; // go to next node
+            while (flag != NULL)
+            {
+                // find unvisited node
+                int i;
+                for (i = 0; i < row; i++)
+                {
+                    if ((graph + i)->key == flag->key)
+                        break;
+                }
+                if (judge[flag->key] == 0)
+                {
+                    flag = graph + i;
+                    break;
+                }
+                flag = flag->next;
+            }
+            if (flag == NULL) // if all nodes in subgraph visited
+            {
+                printf("all visited\n");
+                prev_judge = 1;
+                top--;
+                printf("now top = %d\n", top);
+                if (top > -1)
+                    flag = prev[top]; // return back to previous node
+                else
+                {
+                    sub_done = 1; // subgraph is all done.
+                    printf("sub_done = %d\n", sub_done);
+                }
+            }
         }
     }
     fprintf(file, "\n");
@@ -59,34 +90,53 @@ void graph_bfs(node *graph, int row, FILE *file)
 {
     if (graph == NULL)
         return;
-    int judge[50] = {0}, head = 0, tail = 0, queue[50];
+    int judge[50] = {0}, head, tail, queue[50], visited = 0;
     node *flag;
-    // visit first node
-    queue[0] = graph->key;
-    judge[queue[0]] = 1;
-    // visit the other nodes
-    while (head <= tail) // repeat until all nodes are visited
+    while (visited < row)
     {
-        // find the exact match node according to the keyword
         for (int i = 0; i < row; i++)
-            if ((graph + i)->key == queue[head])
+        {
+            if (judge[(graph+i)->key] == 0)
             {
                 flag = graph + i;
+                printf("**subgraph top flag->key = %d\n", flag->key);
                 break;
             }
-        fprintf(file, "%d", flag->key);
-        flag = flag->next;
-        while (flag != NULL)
-        {
-            // if not visited, put into the queue
-            if (judge[flag->key] == 0)
-            {
-                queue[++tail] = flag->key;
-                judge[flag->key] = 1; // set to visited
-            }
-            flag = flag->next;
         }
-        head++;
+        // put first node into queue
+        head = 0, tail = 0;
+        queue[head] = flag->key;
+        judge[flag->key] = 1;
+        printf("put %d in queue\n",flag->key);
+        visited++;
+        while (head <= tail) // repeat until the subgraph visited
+        {
+            // visit the other nodes
+            // find the exact match node according to the keyword
+            for (int i = 0; i < row; i++)
+                if ((graph + i)->key == queue[head])
+                {
+                    flag = graph + i;
+                    break;
+                }
+            printf("*now flag->key = %d\n",flag->key);
+            fprintf(file, "%d", flag->key);
+            flag = flag->next;
+            while (flag != NULL)
+            {
+                // if not visited, put into the queue
+                if (judge[flag->key] == 0)
+                {
+                    queue[++tail] = flag->key;
+                    judge[flag->key] = 1; // set to visited
+                    visited++;
+                }
+                flag = flag->next;
+            }
+            head++;
+            printf("now head = %d, tail = %d\n", head, tail);
+        }
+        printf("visited = %d\n",visited);
     }
     fprintf(file, "\n");
     return;
@@ -141,12 +191,12 @@ int main()
         {
             {0, 1, 1, 0, 0, 0, 0, 0},
             {1, 0, 0, 1, 1, 0, 0, 0},
-            {1, 0, 0, 0, 0, 1, 1, 0},
-            {0, 1, 0, 0, 0, 0, 0, 1},
-            {0, 1, 0, 0, 0, 0, 0, 1},
-            {0, 0, 1, 0, 0, 0, 0, 1},
-            {0, 0, 1, 0, 0, 0, 0, 1},
-            {0, 0, 0, 1, 1, 1, 1, 0}}; // new table of the graph
+            {1, 0, 0, 0, 0, 1, 0, 0},
+            {0, 1, 0, 0, 0, 0, 0, 0},
+            {0, 1, 0, 0, 0, 0, 0, 0},
+            {0, 0, 1, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 1},
+            {0, 0, 0, 0, 0, 0, 1, 0}}; // new table of the graph
 
     create_graph(graph, (int *)_graph, row, gf);
     fprintf(out, "DFS\t");
