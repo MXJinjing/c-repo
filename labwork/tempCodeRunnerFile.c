@@ -1,1 +1,1 @@
-char ch;
+next
