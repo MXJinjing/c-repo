@@ -1,9 +1,9 @@
 /*
-    Ò»¶Ñºï×ÓÓÐm¸ö£¬±àºÅ·Ö±ðÊÇ1£¬2£¬3 ...m£¬Õâm¸öºï×Ó°´ÕÕ±àºÅ1,2,¡­,mµÄË³ÐòÎ§×øÒ»È¦£¬
-    È»ºó´ÓµÚ1¿ªÊ¼Êý£¬Ã¿Êýµ½µÚn¸ö£¬¸Ãºï×Ó¾ÍÒªÀë¿ª´ËÈ¦£¬ÕâÑùÒÀ´ÎÏÂÀ´£¬
-    Ö±µ½È¦ÖÐÖ»Ê£ÏÂ×îºóÒ»Ö»ºï×Ó£¬Ôò¸Ãºï×Ó¾ÍÎª´óÍõ¡£
+    ä¸€å †çŒ´å­æœ‰mä¸ªï¼Œç¼–å·åˆ†åˆ«æ˜¯1ï¼Œ2ï¼Œ3 ...mï¼Œè¿™mä¸ªçŒ´å­æŒ‰ç…§ç¼–å·1,2,â€¦,mçš„é¡ºåºå›´åä¸€åœˆï¼Œ
+    ç„¶åŽä»Žç¬¬1å¼€å§‹æ•°ï¼Œæ¯æ•°åˆ°ç¬¬nä¸ªï¼Œè¯¥çŒ´å­å°±è¦ç¦»å¼€æ­¤åœˆï¼Œè¿™æ ·ä¾æ¬¡ä¸‹æ¥ï¼Œ
+    ç›´åˆ°åœˆä¸­åªå‰©ä¸‹æœ€åŽä¸€åªçŒ´å­ï¼Œåˆ™è¯¥çŒ´å­å°±ä¸ºå¤§çŽ‹ã€‚
 
-    ÒªÇó£º·Ö±ð²ÉÓÃÏòÁ¿¼°Á´±íÁ½ÖÖ´æ´¢·½Ê½ÊµÏÖ¸ÃÎÊÌâµÄÇó½â£¬¸ø³öÒ»×émºÍn£¬Êä³ö¶ÔÓ¦µÄºïÍõ¡£
+    è¦æ±‚ï¼šåˆ†åˆ«é‡‡ç”¨å‘é‡åŠé“¾è¡¨ä¸¤ç§å­˜å‚¨æ–¹å¼å®žçŽ°è¯¥é—®é¢˜çš„æ±‚è§£ï¼Œç»™å‡ºä¸€ç»„må’Œnï¼Œè¾“å‡ºå¯¹åº”çš„çŒ´çŽ‹ã€‚
 */
 
 #include <stdio.h>
@@ -13,36 +13,36 @@ int main()
 {
     FILE *f = fopen("labwork1-1-output.txt", "w");
     int m, n;
-    printf("ÏòÁ¿Çó·¨\nÇëÊäÈëm,n:\n");
+    printf("å‘é‡æ±‚æ³•\nè¯·è¾“å…¥m,n:\n");
     scanf("%d%d", &m, &n);
     int monkey[99];
     int i, m_, count, q, win;
     for (i = 0; i < m; i++)
-        monkey[i] = 0; //¹æ¶¨ËùÓÐºï×Ó¶¼ÔÚ
-    m_ = 0;            //×ßµôµÄºï×ÓÊýÁ¿
+        monkey[i] = 0; //è§„å®šæ‰€æœ‰çŒ´å­éƒ½åœ¨
+    m_ = 0;            //èµ°æŽ‰çš„çŒ´å­æ•°é‡
     count = 0, q = 0;
-    while (m_ < m) //ÏÞÖÆ´ÎÊý
+    while (m_ < m) //é™åˆ¶æ¬¡æ•°
     {
-        if (count == n - 1) //¼ÆÊýÍê³É
+        if (count == n - 1) //è®¡æ•°å®Œæˆ
         {
-            while (monkey[q] != 0) //ºï×Ó¸ÕºÃ²»ÔÚÔòÍùºóÒ»¸ö
+            while (monkey[q] != 0) //çŒ´å­åˆšå¥½ä¸åœ¨åˆ™å¾€åŽä¸€ä¸ª
                 if (++q == m)
                     q = 0;
             win = q + 1;
             if (m_ < m - 1)
-                printf("µÚ%dÖ»ºï×ÓÀë¿ªÁË\n", win);
+                printf("ç¬¬%dåªçŒ´å­ç¦»å¼€äº†\n", win);
             fprintf(f, "%d", q + 1);
             monkey[q] = 1;
             m_++;
-            count = 0; //ÖØÖÃ¼ÆÊý
+            count = 0; //é‡ç½®è®¡æ•°
         }
-        else if (monkey[q] == 0) //¼ÆÊýÎ´Íê³É
-            count++;             //Èç¹ûºï×ÓÎ´Àë¿ªÔò¼ÆÊý
+        else if (monkey[q] == 0) //è®¡æ•°æœªå®Œæˆ
+            count++;             //å¦‚æžœçŒ´å­æœªç¦»å¼€åˆ™è®¡æ•°
         q++;
-        if (q == m) //¹¹½¨Ñ­»·Êý×é
+        if (q == m) //æž„å»ºå¾ªçŽ¯æ•°ç»„
             q = 0;
     }
-    printf("µÚ%dÖ»ºï×ÓÎªÍõ\n", win);
+    printf("ç¬¬%dåªçŒ´å­ä¸ºçŽ‹\n", win);
     fclose(f);
     return 0;
 }
