@@ -1,11 +1,11 @@
 /*
-    è¾“å…¥ä¸€ä¸ªä¸­ç¼€ç®—æœ¯è¡¨è¾¾å¼ï¼Œè®¡ç®—å…¶ç»“æœã€‚å¯¹è¾“å…¥çš„è¡¨è¾¾å¼ï¼Œåšå¦‚ä¸‹å‡è®¾ï¼š
-    (1)åªè€ƒè™‘+ã€-ã€*ã€/è¿™å››ç§è¿ç®—ç¬¦ï¼›
-    (2)è¾“å…¥çš„ä¸­ç¼€è¡¨è¾¾å¼ä¸­æ•°å­—åªæœ‰æ•´æ•°ï¼Œæ²¡æœ‰å°æ•°ï¼›
-    (3)å‡å®šè¾“å…¥è¡¨è¾¾å¼æ˜¯åˆæ³•çš„ã€‚
+    ÊäÈëÒ»¸öÖĞ×ºËãÊõ±í´ïÊ½£¬¼ÆËãÆä½á¹û¡£¶ÔÊäÈëµÄ±í´ïÊ½£¬×öÈçÏÂ¼ÙÉè£º
+    (1)Ö»¿¼ÂÇ+¡¢-¡¢*¡¢/ÕâËÄÖÖÔËËã·û£»
+    (2)ÊäÈëµÄÖĞ×º±í´ïÊ½ÖĞÊı×ÖÖ»ÓĞÕûÊı£¬Ã»ÓĞĞ¡Êı£»
+    (3)¼Ù¶¨ÊäÈë±í´ïÊ½ÊÇºÏ·¨µÄ¡£
 
-    æ‰©å±•é—®é¢˜ï¼š
-    å¦‚æœè¡¨è¾¾å¼åŠ å…¥æ‹¬å·å’Œä¹˜æ–¹è¿ç®—ï¼Œç®—æ³•å’Œç¨‹åºå¦‚ä½•æ”¹å˜ï¼Ÿ
+    À©Õ¹ÎÊÌâ£º
+    Èç¹û±í´ïÊ½¼ÓÈëÀ¨ºÅºÍ³Ë·½ÔËËã£¬Ëã·¨ºÍ³ÌĞòÈçºÎ¸Ä±ä£¿
 */
 
 #include <math.h>
@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-//å®šä¹‰ä¼˜å…ˆçº§
+//¶¨ÒåÓÅÏÈ¼¶
 int priority(char opt)
 {
     switch (opt)
@@ -29,7 +29,7 @@ int priority(char opt)
     case '^':
         return 4;
     case '(':
-        return 0;
+        return 9;
     case ')':
         return 1;
     default:
@@ -37,7 +37,7 @@ int priority(char opt)
     }
 }
 
-//ä¸‡èƒ½è¿ç®—å‡½æ•°
+//ÍòÄÜÔËËãº¯Êı
 double calculate(double a, double b, char sign)
 {
     switch (sign)
@@ -65,38 +65,38 @@ int main()
     char opt[50] = {0};
     double temp[50] = {0};
     int a = 0, b = 0;
-    fscanf(p, "%[^EOF]", s); //è¯»å–æ–‡ä»¶ä¸­çš„å¤šé¡¹å¼
+    fscanf(p, "%[^EOF]", s); //¶ÁÈ¡ÎÄ¼şÖĞµÄ¶àÏîÊ½
     puts(s);
 
     int lenth = strlen(s);
     char *flag = s;
     int nums = 0;
 
-    //è¯»å–å­—ç¬¦
+    //¶ÁÈ¡×Ö·û
     for (int i = 0; i < lenth; i++)
     {
         if (*flag >= '0' && *flag <= '9')
         {
-            //printf("æ£€æµ‹åˆ°æ•°å­— %c:\t",* flag);
-            while (*flag >= '0' && *flag <= '9') //å¦‚æœæ£€æµ‹åˆ°æ•°å­—
+            // printf("¼ì²âµ½Êı×Ö %c:\t",* flag);
+            while (*flag >= '0' && *flag <= '9') //Èç¹û¼ì²âµ½Êı×Ö
             {
                 nums = nums * 10 + (*flag - '0');
                 flag++, i++;
             }
             temp[a] = nums;
-            printf("è®¡å…¥temp[%d] = %.2f\n", a, temp[a]);
+            printf("¼ÆÈëtemp[%d] = %.2f\n", a, temp[a]);
 
-            nums = 0, a++, i--; //iå¤šåŠ äº†ä¸€æ¬¡
+            nums = 0, a++, i--; // i¶à¼ÓÁËÒ»´Î
         }
-        else //å¦‚æœæ£€æµ‹åˆ°å…¶ä»–å­—ç¬¦
+        else //Èç¹û¼ì²âµ½ÆäËû×Ö·û
         {
-            printf("æ£€æµ‹åˆ°å­—ç¬¦ %c:\t", *flag);
-            //æ£€æµ‹è´Ÿå·
+            printf("¼ì²âµ½×Ö·û %c:\t", *flag);
+            //¼ì²â¸ººÅ
             if (*flag != ' ')
             {
                 if ((*flag == '-') && (a == 0 || *(flag - 1) == '('))
                 {
-                    printf("æ£€æµ‹ä¸ºè´Ÿå·\n");
+                    printf("¼ì²âÎª¸ººÅ\n");
                     temp[a] = -1;
                     a++;
                     opt[b] = '*';
@@ -104,21 +104,21 @@ int main()
                 }
                 else
                 {
-                    if (b > 0 && a > 0) //å¦‚æœä¼˜å…ˆçº§å°äºç­‰äºä¸Šä¸€ä¸ªï¼Œä¸Šä¸€ä¸ªè¿›è¡Œè¿ç®—
+                    if (b > 0 && a > 0)
                     {
                         printf("p(flag) = %d,p(b-1) = %d\n\t", priority(*flag), priority(opt[b - 1]));
-                        while ((priority(*flag) <= priority(opt[b - 1])) && (*flag != '('))
-                        {
+                        while ((priority(*flag) <= priority(opt[b - 1])) && (opt[b - 1] != '('))
+                        { //Èç¹ûÓÅÏÈ¼¶Ğ¡ÓÚµÈÓÚÉÏÒ»¸ö£¬ÉÏÒ»¸ö½øĞĞÔËËã
                             a--;
-                            printf("\n\t* flag = '%c'ä¼˜å…ˆçº§å°äºæˆ–ç­‰äº opt[%d] = '%c'\n", *flag, b - 1, opt[b - 1]);
-                            printf("\tè®¡ç®—ç»“æœtemp[%d]= %.2f '%c' temp[%d]=%.2f", a - 1, temp[a - 1], opt[b - 1], a, temp[a]);
+                            printf("\n\t* flag = '%c'ÓÅÏÈ¼¶Ğ¡ÓÚ»òµÈÓÚ opt[%d] = '%c'\n", *flag, b - 1, opt[b - 1]);
+                            printf("\t¼ÆËã½á¹ûtemp[%d]= %.2f '%c' temp[%d]=%.2f", a - 1, temp[a - 1], opt[b - 1], a, temp[a]);
                             temp[a - 1] = calculate(temp[a], temp[a - 1], opt[b - 1]);
                             printf("=> temp[%d] = %.2f\n\t\t", a - 1, temp[a - 1]);
                             b--;
                         }
                     }
                     opt[b] = *flag;
-                    printf("è®¡å…¥opt[%d] = %c\n\n", b, *flag);
+                    printf("¼ÆÈëopt[%d] = %c\n\n", b, *flag);
                     if (opt[b] == ')')
                         b -= 2;
                     b++;
@@ -128,19 +128,19 @@ int main()
         }
     }
 
-    if (opt[0] != 0) //è¯»åˆ°æ–‡ä»¶å°¾éƒ¨
+    if (opt[0] != 0) //¶Áµ½ÎÄ¼şÎ²²¿
     {
         a--, b--;
-        printf("\nå·²è¯»åˆ°æ–‡ä»¶å°¾éƒ¨ï¼Œæœ€åè¿ç®—\n");
+        printf("\nÒÑ¶Áµ½ÎÄ¼şÎ²²¿£¬×îºóÔËËã\n");
         do
         {
-            printf("\tè®¡ç®—ç»“æœtemp[%d]= %.2f '%c' temp[%d]=%.2f", a - 1, temp[a - 1], opt[b], a, temp[a]);
+            printf("\t¼ÆËã½á¹ûtemp[%d]= %.2f '%c' temp[%d]=%.2f", a - 1, temp[a - 1], opt[b], a, temp[a]);
             temp[a - 1] = calculate(temp[a], temp[a - 1], opt[b]);
             printf("=> temp[%d] = %.2f\n\n", a - 1, temp[a - 1]);
             opt[b] = 0, b--, a--;
         } while (opt[0] != 0);
     }
-    printf("æœ€ç»ˆç­”æ¡ˆï¼š%.2f\n", temp[0]);
+    printf("×îÖÕ´ğ°¸£º%.2f\n", temp[0]);
     fprintf(out, "%.2f", temp[0]);
     return 0;
 }

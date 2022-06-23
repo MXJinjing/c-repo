@@ -12,7 +12,7 @@ typedef struct _edgenode
 typedef struct _vertexnode
 { // type of vertex node
     int vertex;
-    int indegree;
+    int degree;
     edgenode *next;
 } vertexnode;
 
@@ -23,12 +23,16 @@ typedef struct graph_of_adjacency_list
     int edge_total;
 } graph_adjlist;
 
-graph_adjlist *init_graph(graph_adjlist *graph);
-void paint_graph(graph_adjlist *graph);
-int *topological_sort(graph_adjlist *graph, int *saved);
+graph_adjlist *init_graph(graph_adjlist *graph, int mode);
+void paint_graph(graph_adjlist *graph, int number);
+int *topological_sort(graph_adjlist *graph, int *ve);
+int *inverse_topological_sort(graph_adjlist *graph, int *vl, int *ve);
+int *calculate_ae(graph_adjlist *graph, int *ve, int *ae);
+int *calculate_al(graph_adjlist *graph, int *vl, int *al);
+void critical_path(graph_adjlist *graph, int *ae, int *al);
 int main();
 
-graph_adjlist *init_graph(graph_adjlist *graph) // init graph structure from input file
+graph_adjlist *init_graph(graph_adjlist *graph, int mode) // init graph structure from input file
 {
     int tempstart, tempend, tempweight;
     char ch;
@@ -39,17 +43,20 @@ graph_adjlist *init_graph(graph_adjlist *graph) // init graph structure from inp
     for (int i = 0; i < graph->vtx_total; i++)                     // init all vertex nodes
     {
         graph->vtx_node[i].vertex = i + 1;
-        graph->vtx_node[i].indegree = 0;
+        graph->vtx_node[i].degree = 0;
         graph->vtx_node[i].next = NULL;
     }
 
     while ((ch = fgetc(input)) != EOF)
     {
-        fscanf(input, "%d %d %d", &tempstart, &tempend, &tempweight);
+        if (mode == 0)
+            fscanf(input, "%d %d %d", &tempstart, &tempend, &tempweight);
+        if (mode == 1)
+            fscanf(input, "%d %d %d", &tempend, &tempstart, &tempweight);
         for (int i = 0; i < graph->vtx_total; i++) // increase in-degrees
             if (graph->vtx_node[i].vertex == tempend)
             {
-                graph->vtx_node[i].indegree += 1;
+                graph->vtx_node[i].degree += 1;
                 break;
             }
         for (int i = 0; i < graph->vtx_total; i++)      // link edge nodes after vertex nodes
@@ -79,15 +86,17 @@ graph_adjlist *init_graph(graph_adjlist *graph) // init graph structure from inp
     return graph;
 }
 
-void paint_graph(graph_adjlist *graph)
+void paint_graph(graph_adjlist *graph, int number)
 {
-    FILE *paint = fopen("labwork7-1-paint.txt", "w");
+    char s[100] = "labwork7-1-paint-0.txt";
+    s[17] = number + 48;
+    FILE *paint = fopen(s, "w");
     fprintf(paint, "vertex:%d\tedge:%d\n", graph->vtx_total, graph->edge_total);
     for (int i = 0; i < graph->vtx_total; i++)
     {
         edgenode *pointer;
-        fprintf(paint, "[%d|%d] -> ", graph->vtx_node[i].vertex, graph->vtx_node[i].indegree); // paint vertex node
-        pointer = graph->vtx_node[i].next;                                                     // load pointer
+        fprintf(paint, "[%d|%d] -> ", graph->vtx_node[i].vertex, graph->vtx_node[i].degree); // paint vertex node
+        pointer = graph->vtx_node[i].next;                                                   // load pointer
         while (pointer != NULL)
         {
             fprintf(paint, "[%d|%d] -> ", pointer->adjvex, pointer->weight); // paint edge node
@@ -99,12 +108,12 @@ void paint_graph(graph_adjlist *graph)
     return;
 }
 
-int *topological_sort(graph_adjlist *graph, int *saved)
+int *topological_sort(graph_adjlist *graph, int *ve)
 {
-    saved = (int *)malloc(sizeof(int) * (graph->vtx_total + 1));
-    int ignored[100], tempindegree[100], top = -1, visited = 0;
-    for (int i = 0; i < graph->vtx_total; i++) // init ignored array and tempindegree array
-        ignored[i] = 0, tempindegree[i] = graph->vtx_node[i].indegree;
+    ve = (int *)malloc(sizeof(int) * (graph->vtx_total + 1));
+    int saved[100], ignored[100], tempindegree[100], top = -1, visited = 0;
+    for (int i = 0; i < graph->vtx_total; i++) // init ignored, tempindegree, vw array
+        ignored[i] = 0, tempindegree[i] = graph->vtx_node[i].degree, ve[i] = 0;
     do
     {
         int i;
@@ -123,7 +132,8 @@ int *topological_sort(graph_adjlist *graph, int *saved)
                         for (int j = 0; j < graph->vtx_total; j++) // find the corresponding vertex node
                             if (graph->vtx_node[j].vertex == pointer->adjvex)
                             {
-                                tempindegree[j] -= 1; // discrease indegrere
+                                ve[j] = (ve[j] > ve[i] + pointer->weight) ? ve[j] : (ve[i] + pointer->weight); // find longeset path
+                                tempindegree[j] -= 1;                                                          // discrease indegrere
                                 break;
                             }
                         pointer = pointer->next;
@@ -132,23 +142,138 @@ int *topological_sort(graph_adjlist *graph, int *saved)
                 if (i == graph->vtx_total)
                     i = 0; // reset i
             }
-        if (i = graph->vtx_total && visited < graph->vtx_total)
+        if (i > graph->vtx_total && visited < graph->vtx_total)
         {
             printf("error: Could not complete topological sort, there is a cycle\n");
             return NULL;
         }
     } while (visited < graph->vtx_total);
-    return saved; // return saved results
+    for (int i = 0; i < graph->vtx_total; i++)
+    {
+        printf("ve[%d] = %d\n", i, ve[i]);
+    }
+    return ve; // return saved results
+}
+
+int *inverse_topological_sort(graph_adjlist *graph, int *vl, int *ve)
+{
+    vl = (int *)malloc(100 * sizeof(int));
+    int saved[100], ignored[100], tempoutdegree[100], top = -1, visited = 0, vemax = 0;
+    for (int i = 0; i < graph->vtx_total; i++) // find max ve
+        vemax = (vemax > ve[i]) ? vemax : ve[i];
+    for (int i = 0; i < graph->vtx_total; i++) // init ignored, tempoutdegree, vl array
+        ignored[i] = 0, tempoutdegree[i] = graph->vtx_node[i].degree, vl[i] = vemax;
+    do
+    {
+        int i;
+        for (i = 0; i < graph->vtx_total; i++)
+        {
+            if (ignored[i] + tempoutdegree[i] == 0) // if not visited and outdegree is 0
+            {
+                saved[++top] = graph->vtx_node[i].vertex; // put vertex into stack 'saved'
+                visited += 1;
+                ignored[i] = 1; // ignored this vertexnode and its edge nodes
+                if (graph->vtx_node[i].next != NULL)
+                {
+                    edgenode *pointer;
+                    pointer = graph->vtx_node[i].next; // init pointer
+                    while (pointer != NULL)
+                    {
+                        for (int j = 0; j < graph->vtx_total; j++) // find the corresponding vertex node
+                            if (graph->vtx_node[j].vertex == pointer->adjvex)
+                            {
+                                vl[j] = (vl[j] < vl[i] - pointer->weight) ? vl[j] : (vl[i] - pointer->weight); // find longeset path
+                                tempoutdegree[j] -= 1;                                                         // discrease indegrere
+                                break;
+                            }
+                        pointer = pointer->next;
+                    }
+                }
+                if (i == graph->vtx_total)
+                    i = 0; // reset i
+            }
+        }
+        if (i > graph->vtx_total && visited < graph->vtx_total)
+        {
+            printf("i = %d, visited = %d\n", i, visited);
+            printf("error: Could not complete topological sort, there is a cycle\n");
+            return NULL;
+        }
+    } while (visited < graph->vtx_total);
+    for (int i = 0; i < graph->vtx_total; i++)
+    {
+        printf("vl[%d] = %d\n", i, vl[i]);
+    }
+    return vl; // return saved results
+}
+
+int *calculate_ae(graph_adjlist *graph, int *ve, int *ae)
+{
+    ae = (int *)malloc((graph->edge_total + 1) * sizeof(int));
+    int j = 0;
+    for (int i = 0; i < graph->vtx_total; i++)
+    {
+        edgenode *pointer;
+        pointer = graph->vtx_node[i].next; // init pointer
+        while (pointer != NULL)
+        {
+            ae[j++] = ve[i];
+            pointer = pointer->next;
+        }
+    }
+    for (int i = 0; i < graph->edge_total; i++)
+    {
+        printf("ae[%d] = %d\n", i, ae[i]);
+    }
+    return ae; // return saved results
+}
+
+int *calculate_al(graph_adjlist *graph, int *vl, int *al)
+{
+    al = (int *)malloc((graph->edge_total + 1) * sizeof(int));
+    int m = 0;
+    for (int i = 0; i < graph->vtx_total; i++)
+    {
+        edgenode *pointer;
+        pointer = graph->vtx_node[i].next; // init pointer
+        while (pointer != NULL)
+        {
+            for (int j = 0; j < graph->vtx_total; j++) // find the corresponding vertex node
+                if (graph->vtx_node[j].vertex == pointer->adjvex)
+                    al[m++] = vl[j] - pointer->weight;
+            pointer = pointer->next;
+        }
+    }
+    for (int i = 0; i < graph->edge_total; i++)
+    {
+        printf("al[%d] = %d\n", i, al[i]);
+    }
+    return al; // return saved results
+}
+
+void critical_path(graph_adjlist *graph, int *ae, int *al)
+{
+    int l_e[100];
+    for(int i = 0; i < graph->edge_total; i++)
+        l_e[i] = al[i] - ae[i];
+    for (int i = 0; i < graph->edge_total; i++)
+    {
+        printf("l_e[%d] = %d\n", i, l_e[i]);
+    }
+    return; // return saved results
 }
 
 int main()
 {
-    graph_adjlist *graph;
-    graph = init_graph(graph);
-    paint_graph(graph);
-    int *saved = topological_sort(graph, saved);
-
-    for (int i = 0; i < graph->vtx_total; i++) // write topological_sort
-        printf("v%d ", *(saved + i));
+    graph_adjlist *graph, *graph_;
+    graph = init_graph(graph, 0);
+    graph_ = init_graph(graph, 1);
+    paint_graph(graph, 0);
+    paint_graph(graph_, 1);
+    int *ve = topological_sort(graph, ve);
+    int *vl = inverse_topological_sort(graph_, vl, ve);
+    int *ae = calculate_ae(graph, ve, ae);
+    int *al = calculate_al(graph, vl, al);
+    critical_path(graph_, ae, al);
     return 0;
 }

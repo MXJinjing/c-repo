@@ -1,24 +1,25 @@
 /*
-    è®¾æœ‰ä¸¤ä¸ªä¸€å…ƒå¤šé¡¹å¼A(x),B(x)ï¼Œè¯·å®Œæˆè¿ç®—A(x)+B(x)ã€A(x)-B(x)ï¼Œè¦æ±‚å¤šé¡¹å¼é‡‡ç”¨é“¾è¡¨ç»“æ„è¿›è¡Œå­˜å‚¨ï¼Œ
-    å¤šé¡¹å¼å¯ä»¥æŒ‰ç…§å‡å¹‚ï¼ˆé™å¹‚ï¼‰å½¢å¼è¾“å…¥å¯¹åº”çš„ç³»æ•°ã€æŒ‡æ•°é¡¹ï¼Œä½†å¯¹è¾“å…¥è¾“å‡ºæ ¼å¼ä¸åšè¦æ±‚ã€‚
-    
-    æ‰©å±•é—®é¢˜ï¼š
-    (1)ä¸€å…ƒå¤šé¡¹å¼çš„ä¹˜æ³•è¿ç®—ï¼Œå¦‚ä½•å®ç°ï¼Ÿ
-    (2)ä¸€å…ƒå¤šé¡¹å¼çš„é™¤æ³•è¿ç®—ï¼Œå¦‚ä½•å®ç°ï¼Ÿ
-    (3)å¤šå…ƒå¤šé¡¹å¼çš„åŠ æ³•ï¼Œå¦‚ä½•å®ç°ï¼Ÿ
+    ÉèÓĞÁ½¸öÒ»Ôª¶àÏîÊ½A(x),B(x)£¬ÇëÍê³ÉÔËËãA(x)+B(x)¡¢A(x)-B(x)£¬ÒªÇó¶àÏîÊ½²ÉÓÃÁ´±í½á¹¹½øĞĞ´æ´¢£¬
+    ¶àÏîÊ½¿ÉÒÔ°´ÕÕÉıÃİ£¨½µÃİ£©ĞÎÊ½ÊäÈë¶ÔÓ¦µÄÏµÊı¡¢Ö¸ÊıÏî£¬µ«¶ÔÊäÈëÊä³ö¸ñÊ½²»×öÒªÇó¡£
+
+    À©Õ¹ÎÊÌâ£º
+    (1)Ò»Ôª¶àÏîÊ½µÄ³Ë·¨ÔËËã£¬ÈçºÎÊµÏÖ£¿
+    (2)Ò»Ôª¶àÏîÊ½µÄ³ı·¨ÔËËã£¬ÈçºÎÊµÏÖ£¿
+    (3)¶àÔª¶àÏîÊ½µÄ¼Ó·¨£¬ÈçºÎÊµÏÖ£¿
 */
 
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct polynomial {
-    double coef; //ç³»æ•°
-    int index;   //æŒ‡æ•°
+typedef struct polynomial
+{
+    double coef; //ÏµÊı
+    int index;   //Ö¸Êı
     struct polynomial *next;
 } pol;
 
-void pol_record(pol *head, double coef, int index, int mod) //æŒ‰é™å¹‚è®°å½•å¤šé¡¹å¼
+void pol_record(pol *head, double coef, int index, int mod) //°´½µÃİ¼ÇÂ¼¶àÏîÊ½
 {
     pol *lead, *follow, *p;
     p = (pol *)malloc(sizeof(pol));
@@ -26,9 +27,9 @@ void pol_record(pol *head, double coef, int index, int mod) //æŒ‰é™å¹‚è®°å½•å¤š
     p->coef = coef;
     p->index = index;
 
-    if (p->index < 0) //æ£€æŸ¥æŒ‡æ•°èŒƒå›´
+    if (p->index < 0) //¼ì²éÖ¸Êı·¶Î§
     {
-        printf("error:æŒ‡æ•°ä¸èƒ½ä¸ºè´Ÿ\n");
+        printf("error:Ö¸Êı²»ÄÜÎª¸º\n");
         return;
     }
 
@@ -37,19 +38,19 @@ void pol_record(pol *head, double coef, int index, int mod) //æŒ‰é™å¹‚è®°å½•å¤š
     {
         follow = lead;
         lead = lead->next;
-        if (lead == NULL) //åœ¨å°¾éƒ¨æ’å…¥æ–°é¡¹
+        if (lead == NULL) //ÔÚÎ²²¿²åÈëĞÂÏî
         {
             follow->next = p;
             break;
         }
-        if (lead->index == p->index) //å½“åŒ¹é…åˆ°ç›¸åŒæŒ‡æ•°
+        if (lead->index == p->index) //µ±Æ¥Åäµ½ÏàÍ¬Ö¸Êı
         {
-            if (mod == 1) //åŠ æ³•æ¨¡å¼
+            if (mod == 1) //¼Ó·¨Ä£Ê½
                 p->coef += lead->coef;
             lead->coef = p->coef;
             break;
         }
-        if ((lead->index < p->index && follow->index > p->index) || (lead->index < p->index && follow == head)) //åœ¨å¤´æˆ–è€…ä¸­é—´æ’å…¥
+        if ((lead->index < p->index && follow->index > p->index) || (lead->index < p->index && follow == head)) //ÔÚÍ·»òÕßÖĞ¼ä²åÈë
         {
             follow->next = p;
             p->next = lead;
@@ -58,15 +59,15 @@ void pol_record(pol *head, double coef, int index, int mod) //æŒ‰é™å¹‚è®°å½•å¤š
     }
     follow = head;
     lead = follow->next;
-    while (lead != NULL) //è‡ªåŠ¨åˆ é™¤å¤šä½™0
+    while (lead != NULL) //×Ô¶¯É¾³ı¶àÓà0
     {
-        if (lead->coef == 0) //å½“åŒ¹é…åˆ°ç³»æ•°ä¸º0
+        if (lead->coef == 0) //µ±Æ¥Åäµ½ÏµÊıÎª0
             follow->next = lead->next;
         follow = lead;
         lead = lead->next;
     }
     lead = head->next;
-    if (lead == NULL) //æ²¡æœ‰é¡¹å³æ‰€æœ‰é¡¹æ¶ˆå»æ—¶ä¸º0
+    if (lead == NULL) //Ã»ÓĞÏî¼´ËùÓĞÏîÏûÈ¥Ê±Îª0
     {
         pol *temp;
         temp = (pol *)malloc(sizeof(pol));
@@ -82,16 +83,16 @@ void pol_print(pol *head)
 {
     pol *lead, *follow;
     lead = follow = head->next;
-    if (lead == NULL) //æ£€æµ‹å¤šé¡¹å¼æ˜¯å¦å­˜åœ¨
+    if (lead == NULL) //¼ì²â¶àÏîÊ½ÊÇ·ñ´æÔÚ
     {
-        printf("error:å¤šé¡¹å¼ä¸å­˜åœ¨\n");
+        printf("error:¶àÏîÊ½²»´æÔÚ\n");
         return;
     }
-    while (lead != NULL) //æ‰“å°å¤šé¡¹å¼
+    while (lead != NULL) //´òÓ¡¶àÏîÊ½
     {
         follow = lead;
         lead = lead->next;
-        //æ‰“å°è§„åˆ™
+        //´òÓ¡¹æÔò
 
         if (!(follow->index == 0 || follow->index == 1 || follow->index == -1))
             if (follow->coef == 1)
@@ -121,19 +122,77 @@ void pol_print(pol *head)
     }
 }
 
+void pol_print_file(pol *head, FILE *p)
+{
+    pol *lead, *follow;
+    lead = follow = head->next;
+    if (lead == NULL) //¼ì²â¶àÏîÊ½ÊÇ·ñ´æÔÚ
+    {
+        printf("error:¶àÏîÊ½²»´æÔÚ\n");
+        return;
+    }
+    while (lead != NULL) //´òÓ¡¶àÏîÊ½
+    {
+        follow = lead;
+        lead = lead->next;
+        //´òÓ¡¹æÔò
+
+        if (!(follow->index == 0 || follow->index == 1 || follow->index == -1))
+            if (follow->coef == 1)
+            {
+                fprintf(p, "x^%d", follow->index);
+            }
+            else
+            {
+                fprintf(p, "%.2gx^%d", follow->coef, follow->index);
+            }
+        else
+        {
+            if (follow->index == 0)
+            {
+                fprintf(p, "%.2g", follow->coef);
+            }
+            if (follow->index == 1)
+                if (follow->coef == 1)
+                {
+                    fprintf(p, "x");
+                }
+                else
+                {
+                    if (follow->coef == -1)
+                    {
+                        fprintf(p, "-x");
+                    }
+
+                    else
+                    {
+                        fprintf(p, "%.2gx", follow->coef);
+                    }
+                }
+        }
+        if (lead != NULL)
+        {
+            if (lead->coef >= 0)
+            {
+                fprintf(p, "+");
+            }
+        }
+    }
+}
+
 pol *cal_and(pol *A, pol *B)
 {
     if (A->next == NULL)
-        printf("error:å¤šé¡¹å¼Aä¸å­˜åœ¨\n");
+        printf("error:¶àÏîÊ½A²»´æÔÚ\n");
     if (B->next == NULL)
-        printf("error:å¤šé¡¹å¼Bä¸å­˜åœ¨\n");
+        printf("error:¶àÏîÊ½B²»´æÔÚ\n");
 
     pol *AND, *pA, *pB, *p, *follow, *lead, *temp;
     AND = (pol *)malloc(sizeof(pol));
     AND->next = NULL;
     p = follow = AND;
     pA = A;
-    while (pA != NULL) //å¤åˆ¶Aåˆ°AND
+    while (pA != NULL) //¸´ÖÆAµ½AND
     {
         if (p == NULL)
         {
@@ -148,7 +207,7 @@ pol *cal_and(pol *A, pol *B)
         pA = pA->next;
     }
     pB = B->next;
-    while (pB != NULL) //æ’å…¥Båˆ°AND
+    while (pB != NULL) //²åÈëBµ½AND
     {
         pol_record(AND, pB->coef, pB->index, 1);
         pB = pB->next;
@@ -156,7 +215,7 @@ pol *cal_and(pol *A, pol *B)
     follow = lead = AND;
     follow = lead;
     lead = lead->next;
-    if (lead == NULL) //æ²¡æœ‰é¡¹å³æ‰€æœ‰é¡¹æ¶ˆå»æ—¶ä¸º0
+    if (lead == NULL) //Ã»ÓĞÏî¼´ËùÓĞÏîÏûÈ¥Ê±Îª0
     {
         temp = (pol *)malloc(sizeof(pol));
         follow->next = temp;
@@ -178,6 +237,7 @@ pol *cal_and3(pol *A, pol *B, pol *C)
 
 int main()
 {
+    FILE *p = fopen("labwork2-2-out.txt", "w");
     pol *A, *B, *C, *AND;
     int index;
     char choice;
@@ -190,43 +250,43 @@ int main()
     C = (pol *)malloc(sizeof(pol));
     C->next = NULL;
 
-    printf("--------------------è¯·é€æ­¥è¾“å…¥å¤šé¡¹å¼ A-------------------- \n\n");
+    printf("--------------------ÇëÖğ²½ÊäÈë¶àÏîÊ½ A-------------------- \n\n");
     while (1)
     {
-        printf("è¯·è¾“å…¥ç³»æ•°&æŒ‡æ•°ï¼š");
+        printf("ÇëÊäÈëÏµÊı&Ö¸Êı£º");
         scanf("%lf%d", &coef, &index);
         pol_record(A, coef, index, 0);
         pol_print(A);
         printf("\n");
-        printf("ç»§ç»­ï¼Ÿ(å›è½¦ç»§ç»­ï¼Œè¾“å…¥né€€å‡º):");
+        printf("¼ÌĞø£¿(»Ø³µ¼ÌĞø£¬ÊäÈënÍË³ö):");
         getchar();
         scanf("%c", &choice);
         if (choice == 'n')
             break;
     }
-    printf("\n--------------------è¯·é€æ­¥è¾“å…¥å¤šé¡¹å¼ B-------------------- \n\n");
+    printf("\n--------------------ÇëÖğ²½ÊäÈë¶àÏîÊ½ B-------------------- \n\n");
     while (1)
     {
-        printf("è¯·è¾“å…¥ç³»æ•°&æŒ‡æ•°ï¼š");
+        printf("ÇëÊäÈëÏµÊı&Ö¸Êı£º");
         scanf("%lf%d", &coef, &index);
         pol_record(B, coef, index, 0);
         pol_print(B);
         printf("\n");
-        printf("ç»§ç»­ï¼Ÿ(å›è½¦ç»§ç»­ï¼Œè¾“å…¥né€€å‡º):");
+        printf("¼ÌĞø£¿(»Ø³µ¼ÌĞø£¬ÊäÈënÍË³ö):");
         getchar();
         scanf("%c", &choice);
         if (choice == 'n')
             break;
     }
-    printf("\n--------------------è¯·é€æ­¥è¾“å…¥å¤šé¡¹å¼ C-------------------- \n\n");
+    printf("\n--------------------ÇëÖğ²½ÊäÈë¶àÏîÊ½ C-------------------- \n\n");
     while (1)
     {
-        printf("è¯·è¾“å…¥ç³»æ•°&æŒ‡æ•°ï¼š");
+        printf("ÇëÊäÈëÏµÊı&Ö¸Êı£º");
         scanf("%lf%d", &coef, &index);
         pol_record(C, coef, index, 0);
         pol_print(C);
         printf("\n");
-        printf("ç»§ç»­ï¼Ÿ(å›è½¦ç»§ç»­ï¼Œè¾“å…¥né€€å‡º):");
+        printf("¼ÌĞø£¿(»Ø³µ¼ÌĞø£¬ÊäÈënÍË³ö):");
         getchar();
         scanf("%c", &choice);
         if (choice == 'n')
@@ -247,6 +307,8 @@ int main()
     printf("----------------------------------------------------------\n");
     printf("\t");
     pol_print(AND);
+    pol_print_file(AND, p);
     printf("\n");
+    fclose(p);
     return 0;
 }
