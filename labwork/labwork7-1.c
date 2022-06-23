@@ -35,11 +35,8 @@ graph_adjlist *init_graph(graph_adjlist *graph) // init graph structure from inp
     FILE *input = fopen("labwork7-1-input.txt", "r"); // open input file
     graph = (graph_adjlist *)malloc(sizeof(graph_adjlist));
 
-    // scan the total number of v and a from first line
-    fscanf(input, "%d %d", &graph->vtx_total, &graph->edge_total);
-
-    // init all vertex nodes
-    for (int i = 0; i < graph->vtx_total; i++)
+    fscanf(input, "%d %d", &graph->vtx_total, &graph->edge_total); // scan from first line
+    for (int i = 0; i < graph->vtx_total; i++)                     // init all vertex nodes
     {
         graph->vtx_node[i].vertex = i + 1;
         graph->vtx_node[i].indegree = 0;
