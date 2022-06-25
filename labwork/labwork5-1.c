@@ -1,7 +1,7 @@
 /*
-    ½¨Á¢ÒÔ×óÓÒº¢×ÓÁ´½Ó½á¹¹±íÊ¾µÄ¶ş²æÊ÷£¬ÊµÏÖ¶ş²æÊ÷µÄÏÈĞò¡¢ÖĞĞò¡¢ºóĞòµÄµİ¹éºÍ·Çµİ¹é·½Ê½±éÀú£¬·Ö²ã±éÀú¡¢Í³¼ÆÊ÷µÄ¸ß¶È¡£
-    À©Õ¹ÎÊÌâ£º
-    ¸ø¶¨Ò»×é¹Ø¼ü×ÖĞòÁĞ£¬½¨Á¢Ò»¸öÆ½ºâ¶ş²æÊ÷¡£
+    å»ºç«‹ä»¥å·¦å³å­©å­é“¾æ¥ç»“æ„è¡¨ç¤ºçš„äºŒå‰æ ‘ï¼Œå®ç°äºŒå‰æ ‘çš„å…ˆåºã€ä¸­åºã€ååºçš„é€’å½’å’Œéé€’å½’æ–¹å¼éå†ï¼Œåˆ†å±‚éå†ã€ç»Ÿè®¡æ ‘çš„é«˜åº¦ã€‚
+    æ‰©å±•é—®é¢˜ï¼š
+    ç»™å®šä¸€ç»„å…³é”®å­—åºåˆ—ï¼Œå»ºç«‹ä¸€ä¸ªå¹³è¡¡äºŒå‰æ ‘ã€‚
 */
 
 #include <stdio.h>
@@ -13,7 +13,7 @@ typedef struct binary_tree {
     struct binary_tree *rson;
 } btree;
 
-//ÒÔ´ø#µÄÏÈĞò±éÀú¹¹½¨¶ş²æÊ÷
+//ä»¥å¸¦#çš„å…ˆåºéå†æ„å»ºäºŒå‰æ ‘
 char *btree_create(btree *root, char *s)
 {
     root->data = *(s++);
@@ -22,13 +22,13 @@ char *btree_create(btree *root, char *s)
     {
         btree *templ = (btree *)malloc(sizeof(btree));
         btree *tempr = (btree *)malloc(sizeof(btree));
-        printf("´´½¨%cµÄ×ó×ÓÊ÷:", root->data);
+        printf("åˆ›å»º%cçš„å·¦å­æ ‘:", root->data);
         s = btree_create(templ, s);
         if (templ->data != '#')
             root->lson = templ;
         else
             root->lson = NULL;
-        printf("´´½¨%cµÄÓÒ×ÓÊ÷:", root->data);
+        printf("åˆ›å»º%cçš„å³å­æ ‘:", root->data);
         s = btree_create(tempr, s);
         if (tempr->data != '#')
             root->rson = tempr;
@@ -79,17 +79,17 @@ void *preorder_traversal_2(btree *root, FILE *fp)
         return;
     btree *stack[50], *queue[50], *p = NULL;
     int top = -1, tail = -1;
-    stack[++top] = root; //¸ù½ÚµãÈëÕ»
+    stack[++top] = root; //æ ¹èŠ‚ç‚¹å…¥æ ˆ
     do
     {
-        queue[++tail] = p = stack[top--]; //È¡³öÕ»¶¥½ÚµãÈë¶ÓÁĞ
+        queue[++tail] = p = stack[top--]; //å–å‡ºæ ˆé¡¶èŠ‚ç‚¹å…¥é˜Ÿåˆ—
         if (p->rson != NULL)
-            stack[++top] = p->rson; //Õ»¶¥½ÚµãµÄÓÒ×ÓÊ÷½ÚµãÈëÕ»
+            stack[++top] = p->rson; //æ ˆé¡¶èŠ‚ç‚¹çš„å³å­æ ‘èŠ‚ç‚¹å…¥æ ˆ
         if (p->lson != NULL)
-            stack[++top] = p->lson; //Õ»¶¥½ÚµãµÄ×ó×ÓÊ÷½ÚµãÈëÕ»
-    } while (top > -1);             //Ñ­»·Ö±µ½Õ»¿Õ
+            stack[++top] = p->lson; //æ ˆé¡¶èŠ‚ç‚¹çš„å·¦å­æ ‘èŠ‚ç‚¹å…¥æ ˆ
+    } while (top > -1);             //å¾ªç¯ç›´åˆ°æ ˆç©º
     //output
-    fprintf(fp, "ÏÈĞò£¨·Çµİ¹é)\t");
+    fprintf(fp, "å…ˆåºï¼ˆéé€’å½’)\t");
     for (int i = 0; i <= tail; i++)
     {
         fprintf(fp, "%c", queue[i]->data);
@@ -109,12 +109,12 @@ void *inorder_traversal_2(btree *root, FILE *fp)
         {
             stack[++top] = p;
             p = p->lson;
-        }                                 //pÖ¸ÕëÑ°ÕÒ×î×ó¶ËµÄ½Úµã
-        queue[++tail] = p = stack[top--]; //Õ»¶¥½Úµã³öÕ»£¬¸ù½ÚµãÈë¶ÓÁĞ
-        p = p->rson;                      //pÖ¸Õë½øÈëÓÒ×ÓÊ÷
-    } while (p != NULL || top > -1);      //Ñ­»·Ö±µ½p²»Îª¿ÕÇÒÕ»¿Õ
+        }                                 //pæŒ‡é’ˆå¯»æ‰¾æœ€å·¦ç«¯çš„èŠ‚ç‚¹
+        queue[++tail] = p = stack[top--]; //æ ˆé¡¶èŠ‚ç‚¹å‡ºæ ˆï¼Œæ ¹èŠ‚ç‚¹å…¥é˜Ÿåˆ—
+        p = p->rson;                      //pæŒ‡é’ˆè¿›å…¥å³å­æ ‘
+    } while (p != NULL || top > -1);      //å¾ªç¯ç›´åˆ°pä¸ä¸ºç©ºä¸”æ ˆç©º
     //output
-    fprintf(fp, "ÖĞĞò£¨·Çµİ¹é)\t");
+    fprintf(fp, "ä¸­åºï¼ˆéé€’å½’)\t");
     for (int i = 0; i <= tail; i++)
     {
         fprintf(fp, "%c", queue[i]->data);
@@ -134,18 +134,18 @@ void *postorder_traversal_2(btree *root, FILE *fp)
         {
             stack[++top] = p;
             p = p->lson;
-        }                 //pÖ¸ÕëÑ°ÕÒ×î×ó¶ËµÄ½Úµã
-        p = stack[top--]; //Õ»¶¥½Úµã³öÕ»
+        }                 //pæŒ‡é’ˆå¯»æ‰¾æœ€å·¦ç«¯çš„èŠ‚ç‚¹
+        p = stack[top--]; //æ ˆé¡¶èŠ‚ç‚¹å‡ºæ ˆ
         if (p->rson == NULL || p->rson == prev)
         {
-            //Èç¹ûÓÒ×ÓÊ÷Îª¿Õ£¬»òÕßÓÒ×ÓÊ÷ÊÇÉÏÒ»¸ö±»±éÀúµÄ£¬¸ù½ÚµãÈë¶ÓÁĞ
+            //å¦‚æœå³å­æ ‘ä¸ºç©ºï¼Œæˆ–è€…å³å­æ ‘æ˜¯ä¸Šä¸€ä¸ªè¢«éå†çš„ï¼Œæ ¹èŠ‚ç‚¹å…¥é˜Ÿåˆ—
             queue[++tail] = prev = p, p = NULL;
         }
-        else //·ñÔòÓÒ×ÓÊ÷ÈëÕ»
+        else //å¦åˆ™å³å­æ ‘å…¥æ ˆ
             stack[++top] = p, p = p->rson;
-    } while (top > -1); //Ñ­»·Ö±µ½Õ»¿Õ
+    } while (top > -1); //å¾ªç¯ç›´åˆ°æ ˆç©º
     //output
-    fprintf(fp, "ºóĞò£¨·Çµİ¹é)\t");
+    fprintf(fp, "ååºï¼ˆéé€’å½’)\t");
     for (int i = 0; i <= tail; i++)
     {
         fprintf(fp, "%c", queue[i]->data);
@@ -163,14 +163,14 @@ void *level_traversal(btree *root, FILE *fp)
     queue2[++tail2] = root;
     do
     {
-        p = queue[++tail] = queue2[head2++]; //¶ÓÁĞ2Í·³ö¶ÓÁĞ
+        p = queue[++tail] = queue2[head2++]; //é˜Ÿåˆ—2å¤´å‡ºé˜Ÿåˆ—
         if (p->lson != NULL)
-            queue2[++tail2] = p->lson; //×ó×ÓÊ÷Èë2
+            queue2[++tail2] = p->lson; //å·¦å­æ ‘å…¥2
         if (p->rson != NULL)
-            queue2[++tail2] = p->rson; //ÓÒ×ÓÊ÷Èë2
+            queue2[++tail2] = p->rson; //å³å­æ ‘å…¥2
         p = NULL;
-    } while (tail2 != head2); //Ñ­»·Ö±µ½2¿Õ
-    fprintf(fp, "·Ö²ã\t");
+    } while (tail2 != head2); //å¾ªç¯ç›´åˆ°2ç©º
+    fprintf(fp, "åˆ†å±‚\t");
     for (int i = 0; i <= tail; i++)
     {
         fprintf(fp, "%c", queue[i]->data);
@@ -201,20 +201,20 @@ int main()
     btree *root = (btree *)malloc(sizeof(btree));
     //    btree_create(root,"ABE##F##CG###");
     btree_create(root, "ab#def##g###ch#i#k##j###");
-    fprintf(fp, "ÏÈĞò£¨µİ¹é)\t");
+    fprintf(fp, "å…ˆåºï¼ˆé€’å½’)\t");
     preorder_traversal(root, fp);
     fprintf(fp, "\n");
     preorder_traversal_2(root, fp);
-    fprintf(fp, "ÖĞĞò£¨µİ¹é)\t");
+    fprintf(fp, "ä¸­åºï¼ˆé€’å½’)\t");
     inorder_traversal(root, fp);
     fprintf(fp, "\n");
     inorder_traversal_2(root, fp);
-    fprintf(fp, "ºóĞò£¨µİ¹é)\t");
+    fprintf(fp, "ååºï¼ˆé€’å½’)\t");
     postorder_traversal(root, fp);
     fprintf(fp, "\n");
     postorder_traversal_2(root, fp);
     level_traversal(root, fp);
-    fprintf(fp, "\nÊ÷¸ß=");
+    fprintf(fp, "\næ ‘é«˜=");
     fprintf(fp, "%d", ScanDepth(root));
     fclose(fp);
     return 0;

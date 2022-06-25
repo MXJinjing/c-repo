@@ -182,7 +182,7 @@ int *inverse_topological_sort(graph_adjlist *graph, int *vl, int *ve)
                         for (int j = 0; j < graph->vtx_total; j++) // find the corresponding vertex node
                             if (graph->vtx_node[j].vertex == pointer->adjvex)
                             {
-                                vl[j] = (vl[j] < vl[i] - pointer->weight) ? vl[j] : (vl[i] - pointer->weight); // find longeset path
+                                vl[j] = (vl[j] < vl[i] - pointer->weight) ? vl[j] : (vl[i] - pointer->weight); // find shortest path
                                 tempoutdegree[j] -= 1;                                                         // discrease indegrere
                                 break;
                             }
@@ -253,14 +253,55 @@ int *calculate_al(graph_adjlist *graph, int *vl, int *al)
 
 void critical_path(graph_adjlist *graph, int *ae, int *al)
 {
-    int l_e[100];
-    for(int i = 0; i < graph->edge_total; i++)
-        l_e[i] = al[i] - ae[i];
+    FILE *output = fopen("labwork7-1-output.txt", "w");
+    int l_e[100], cvex[100], top = 0, top_ = 0, saved = 0;
+
     for (int i = 0; i < graph->edge_total; i++)
     {
+        l_e[i] = al[i] - ae[i];
         printf("l_e[%d] = %d\n", i, l_e[i]);
     }
-    return; // return saved results
+    int j = 0;
+    for (int i = 0; i < graph->vtx_total; i++)
+    {
+        edgenode *pointer;
+        pointer = graph->vtx_node[i].next; // init pointer
+        while (pointer != NULL)
+        {
+            if (l_e[j] == 0)
+            {
+                for (int k = 0; k < top; k++)
+                {
+                    if (cvex[k] == graph->vtx_node[i].vertex)
+                    {
+                        saved = 1;
+                        break;
+                    }
+                }
+                if (saved == 0) //saved the start vertex if not saved
+                    cvex[top++] = graph->vtx_node[i].vertex;
+                else
+                    saved = 0;
+                for (int k = 0; k < top; k++)
+                {
+                    if (cvex[k] == pointer->adjvex)
+                    {
+                        saved = 1;
+                        break;
+                    }
+                }
+                if (saved == 0) //saved the end vertex if not saved
+                    cvex[top++] = pointer->adjvex;
+                else
+                    saved = 0;
+            }
+            j++, pointer = pointer->next;
+        }
+    }
+    for (int i = 0; i < top; i++)
+        fprintf(output, "v%d ", cvex[i]);
+    fclose(output);
+    return;
 }
 
 int main()
@@ -274,6 +315,6 @@ int main()
     int *vl = inverse_topological_sort(graph_, vl, ve);
     int *ae = calculate_ae(graph, ve, ae);
     int *al = calculate_al(graph, vl, al);
-    critical_path(graph_, ae, al);
+    critical_path(graph, ae, al);
     return 0;
 }
