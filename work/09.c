@@ -10,3 +10,5 @@
 #define MARKED -1
 #define MAXN 10000
 #define NOWAY (llu)1000000001
+
+define unsigned long llu;
