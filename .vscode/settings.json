@@ -10,6 +10,17 @@
         "memory": "c",
         "optional": "c",
         "string_view": "c",
-        "system_error": "c"
+        "system_error": "c",
+        "array": "c",
+        "deque": "c",
+        "string": "c",
+        "unordered_map": "c",
+        "exception": "c",
+        "initializer_list": "c",
+        "istream": "c",
+        "ostream": "c",
+        "sstream": "c",
+        "streambuf": "c",
+        "math.h": "c"
     }
 }
