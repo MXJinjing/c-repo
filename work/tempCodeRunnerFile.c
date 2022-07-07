@@ -1,1 +1,1 @@
-map[v - 1][u - 1] = weight;
+ times++
