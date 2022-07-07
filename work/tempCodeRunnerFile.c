@@ -33,17 +33,14 @@ int main(void)
         target_hash = target_hash * BASE + (ull)target[i], pow = pow * BASE;
 
     //查找相同长度串
-    ull cut_hash;
-    for (int i = strlen(target) - 1, j; i < strlen(main); i++)
+    for (i = len_target - 1; i < len_main; i++)
     {
-        j = i - strlen(target);
-        cut_hash = hash[i];
-        if (j >= 0)
-            cut_hash -= hash[j] * pow;
-        if (cut_hash == target_hash)
+        if (i - len_target < 0 && hash[i] == target_hash)
+            times++;
+        else if (hash[i] - hash[i - len_target] * pow == target_hash)
             times++;
     }
-    
+    //printf("times = ");
     printf("%d\n", times);
     return 0;
 }
