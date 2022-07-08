@@ -1,30 +1,45 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include <sys/cdefs.h>
-#define MAXN 1000050
-typedef long long ll;
+#include <string.h>
 
-ll trie[MAXN][26];  //字典树
-int cnt[MAXN]; //结束点
+#define MAXN 10000
+#define MAXM 1000000
 
+long long trie[MAXN][26]; //字典树
+int cnt[MAXN];            //结束点
 
 void insert(char *string);
 int find();
+void clear();
 
 int main()
 {
-    int times,n;
-    char *string[MAXN],* article;
-    scanf("%d",times)
-    for(int i=0; i<times; i++)
+    long long n, times;
+    char string[MAXM], article[MAXM];
+    scanf("%lld", &times);
+    n = 0;
+    for (long long i = 0; i < times; i++)
     {
-        scanf("%d",n);
-        for(int j=0; j<n; j++)
+        //清理并初始化字典树
+        clear();
+        for (long long j = 0; j < n; j++)
         {
-            gets(string[j]);
-            printf("%s\n",string[j]);
+            scanf("%s", string);
+            printf("%s\n", string);
+            insert(*string);
         }
+        scanf("%s", article);
+        printf("%s\n", article);
+        find();
     }
     return 0;
+}
+
+void insert(char *string)
+{
+    return;
+}
+
+void find()
+{
 }
