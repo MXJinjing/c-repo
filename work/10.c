@@ -5,8 +5,9 @@
 #define MAXN 10000
 #define MAXM 1000000
 
-long long trie[MAXN][26]; //字典树
+long long trie[MAXN][26]; //字典树 静态
 int cnt[MAXN];            //结束点
+long long id;
 
 void insert(char *string);
 int find();
@@ -29,7 +30,7 @@ int main()
             insert(*string);
         }
         scanf("%s", article);
-        printf("%s\n", article);
+        gets(article);
         find();
     }
     return 0;
@@ -37,9 +38,24 @@ int main()
 
 void insert(char *string)
 {
+    char *flag = string;
+    int p = 0, letter = 0;
+    id = 0;
+    for (; *flag != '\0'; flag++)
+    {
+        letter = *flag - 'a'; 
+        if (trie[p][letter] == 0) //如果节点没有被创建
+        {
+            id ++;
+            trie[p][letter] = id;
+        }
+        p = id; //移动到下一个节点
+    }
+    cnt[p] = 1;
     return;
 }
 
-void find()
+void find(char *string, char *target)
 {
+    char *
 }
