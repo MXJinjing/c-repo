@@ -22,5 +22,5 @@
         "sstream": "c",
         "streambuf": "c",
         "math.h": "c"
-    }
+    },
 }
