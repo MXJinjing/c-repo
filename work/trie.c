@@ -10,7 +10,7 @@ int cnt[MAXN];            //结束点
 long long id;
 
 void insert(char *string);
-int find();
+int find(char *target);
 void clear();
 
 int main()
@@ -55,7 +55,19 @@ void insert(char *string)
     return;
 }
 
-void find(char *string, char *target)
+int find(char *target)
 {
-    char *
+    int count = 0;//重计数
+    char *flag = target;
+    int p = 0,letter = 0;
+    for(; *flag != '\0'; flag++)
+    {
+        letter = *flag - 'a';
+        if(trie[p][letter] ==0)//如果节点不存在 
+            go back; //利用ac自动树回退
+        if(cnt[p] == 1)//如果找到末尾
+            count ++;
+        p = id;
+    }
+    return count;
 }
