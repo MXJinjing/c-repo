@@ -2,19 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAXN 10000
+#define MAXN 50000
 #define MAXM 1000000
-#define ROOT 0
 
 long long trie[MAXN][26]; //字典树 静态
+long long next[MAXN];     //↑fail
 int cnt[MAXN];            //结束点
-int next[MAXN];           //↑fail
 
-long long id;
-
-void creatfail();
+long long id, count;
+long long p, q, front, rear, queue[MAXN];
 void insert(char *string);
-int find(char *target);
+void find(char *target);
 void clear();
 
 int main()
@@ -26,77 +24,109 @@ int main()
     for (long long i = 0; i < times; i++)
     {
         clear();
+        scanf("%lld", &n);
         for (long long j = 0; j < n; j++)
         {
             scanf("%s", string);
-            printf("%s\n", string);
-            insert(*string);
+            insert(string);
         }
-        scanf("%s", article);
         gets(article);
-        find();
+
+        // for (long long i = 0; i <= id; i++)
+        // {
+        //     printf("cnt[%lld] = %lld\n", i, cnt[i]);
+        //     for (int j = 0; j < 26; j++)
+        //         if (trie[i][j] != 0)
+        //             printf("%lld %c -> %lld\n", i, j + 'a', trie[i][j]);
+        // }
+
+        find(article);
+        printf("%lld\n", count);
     }
     return 0;
-}
-
-void createfail()
-{
-    int p, q, front, rear;
-    int queue[MAXN];
-    front = 0, rear = 0, queue[0] = ROOT;
-
-    p = ROOT;
-    for (int i = 0; i < 26; i++)
-        if (trie[p][i] != 0)
-        {
-            queue[front++] = trie[p][i];
-            fail[trie[p][i]] = ROOT;
-        }
-
-    while (front >= rear)
-    {
-    }
 }
 
 void insert(char *string)
 {
     char *flag = string;
-    int p = 0, letter = 0;
-    id = 0;
+    long long p;
+    int letter = 0;
+    p = 0;
     for (; *flag != '\0'; flag++)
     {
         letter = *flag - 'a';
-        if (trie[p][letter] == 0) //如果节点没有被创建
+        if (!trie[p][letter]) //如果节点没有被创建
         {
-            id++;
-            trie[p][letter] = id;
+            trie[p][letter] = ++id;
         }
-        p = id; //移动到下一个节点
+        p = trie[p][letter]; //移动到下一个节点
     }
     cnt[p] += 1;
     return;
 }
 
-int find(char *target)
+void find(char *target)
 {
-    int count = 0; //重计数
+    front = 0, rear = 0, queue[0] = 0;
+    p = 0;
+    for (int i = 0; i < 26; i++)
+        if (trie[p][i] != 0)
+        {
+            queue[front++] = trie[p][i];
+            next[trie[p][i]] = 0;
+        }
+
+    while (front > rear)
+    {
+        p = queue[rear++];
+
+        for (int i = 0; i < 26; i++)
+            if (trie[p][i] != 0)
+            {
+                //printf("fail[%lld] = %lld\n", trie[p][i], trie[next[p]][i]);
+                queue[front++] = trie[p][i];
+                next[trie[p][i]] = trie[next[p]][i];
+            }
+            else
+            {
+                // printf("fail[%lld] = 0(root)\n", trie[p][i]);
+                next[trie[p][i]] = 0;
+            }
+    }
+    int letter;
     char *flag = target;
-    int p = 0, letter = 0;
-    for (; *flag != '\0'; flag++)
+    p = 0, letter = 0;
+    for (; *flag != '\0';)
     {
         letter = *flag - 'a';
-        if (trie[p][letter] == 0) //如果节点不存在
-            go back;              //利用ac自动树回退
-        if (cnt[p] == 1)          //如果找到末尾
-            count++;
-        p = id;
+        if (p != 0 && trie[p][letter] == 0)
+        {
+            p = next[p];
+        }
+        else
+        {
+            p = trie[p][letter];
+            flag++;
+        }
+        if (cnt[p] > 0)
+        {
+            count += cnt[p];
+            //printf("cnt[%d] = %d\n", p, cnt[p]);
+        }
     }
-    return count;
+    return;
 }
 
 void clear()
 {
+    id = 0;
+    count = 0;
     for (int i = 0; i < MAXN; i++)
+    {
         for (int j = 0; j < 26; j++)
             trie[i][j] = 0;
+        next[i] = 0;
+        cnt[i] = 0;
+    }
+    return;
 }

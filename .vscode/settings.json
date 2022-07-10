@@ -21,6 +21,7 @@
         "ostream": "c",
         "sstream": "c",
         "streambuf": "c",
-        "math.h": "c"
+        "math.h": "c",
+        "utility": "c"
     },
 }
