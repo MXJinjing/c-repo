@@ -32,7 +32,7 @@ int kmp(char *main, char *target)
         return 0;
     //运算next数组以备回退
     m = 0, k = -1;
-    next[0] = -1; //初始化next值
+    next[0] = -1; //初始化fail
     target[target_size] = '0';
     target[target_size + 1] = '\0';
     while (m < main_size)
