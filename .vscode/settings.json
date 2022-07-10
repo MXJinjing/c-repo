@@ -24,4 +24,5 @@
         "math.h": "c",
         "utility": "c"
     },
+    "editor.mouseWheelZoom": true,
 }
