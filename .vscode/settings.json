@@ -22,7 +22,9 @@
         "sstream": "c",
         "streambuf": "c",
         "math.h": "c",
-        "utility": "c"
+        "utility": "c",
+        "limits": "cpp"
     },
     "editor.mouseWheelZoom": true,
+    "C_Cpp.dimInactiveRegions": false,
 }
