@@ -55,6 +55,5 @@ int kmp(char *main, char *target)
             times++, j = next[j - 1], i -= 1;
         }
     }
-    free(next);
     return times;
 }

@@ -22,7 +22,8 @@
         "sstream": "c",
         "streambuf": "c",
         "math.h": "c",
-        "utility": "c"
+        "utility": "c",
+        "limits": "cpp"
     },
     "editor.mouseWheelZoom": true,
     "clang-format.language.cpp.enable": true,
