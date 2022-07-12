@@ -25,4 +25,7 @@
         "utility": "c"
     },
     "editor.mouseWheelZoom": true,
+    "clang-format.language.cpp.enable": true,
+    "clang-format.fallbackStyle": "WebKit",
+    "clang-format.language.cpp.style": "",
 }
