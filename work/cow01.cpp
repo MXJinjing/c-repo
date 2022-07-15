@@ -6,20 +6,26 @@
 // 0≤A_i≤2000
 // 输出格式:
 // 输出一个整数，表示这个平均数的 1000 倍。不用四舍五入，直接输出。
+//  c[i] = a[i] - k* i
 
 #include <future>
 #include <iostream>
 #include <istream>
 #include <stdio.h>
 #define MAXN 100010
+#define EPS 0.0001
 using namespace std;
 
-long n, l, a[MAXN];
-int main() {
-  cin >> n >> l;
-  for (long i = 0; i < n; i++) {
-    cin >> a[i];
-    
-  }
-  return 0;
+long n, L, a[MAXN];
+int main()
+{
+    cin >> n >> L;
+    for (long i = 0; i < n; i++) {
+        cin >> a[i];
+        long l = 0, r = 2000, mid;
+        while (r - l > L) {
+            
+        }
+    }
+    return 0;
 }
